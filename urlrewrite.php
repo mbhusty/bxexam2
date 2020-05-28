@@ -8,7 +8,7 @@ $arUrlRewrite=array (
     'PATH' => '/services/index.php',
     'SORT' => 100,
   ),
-  1 => 
+  3 => 
   array (
     'CONDITION' => '#^/products/#',
     'RULE' => '',
