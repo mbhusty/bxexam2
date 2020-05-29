@@ -33,3 +33,17 @@ $eventManager->addEventHandler("iblock", "OnBeforeIBlockElementUpdate", function
 
 	return true;
 });
+
+$eventManager->addEventHandler("main", "OnEpilog", function () {
+	if (defined("ERROR_404") && ERROR_404 == "Y" || CHTTP::GetLastStatus() == "404 Not Found") {
+		global $APPLICATION;
+		$currentPage = $APPLICATION->GetCurUri();
+		CEventLog::Add(array(
+			"SEVERITY" => "INFO",
+			"AUDIT_TYPE_ID" => "ERROR_404",
+			"MODULE_ID" => "main",
+			"DESCRIPTION" => $currentPage,
+		));
+	}
+
+});
