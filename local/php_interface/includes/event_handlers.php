@@ -2,7 +2,8 @@
 $eventManager = \Bitrix\Main\EventManager::getInstance();
 
 const PRODUCTS_IBLOCK_ID = 2;
-
+const CONTENT_MANAGER_GROUP_ID = 5;
+const META_IBLOCK_ID = 6;
 // Before Product deactivated event
 $eventManager->addEventHandler("iblock", "OnBeforeIBlockElementUpdate", function (&$arFields) {
 	global $APPLICATION;
@@ -69,4 +70,47 @@ $eventManager->addEventHandler("main", "OnBeforeEventAdd", function (&$event, &$
 		"ITEM_ID" => $USER->GetID(),
 		"DESCRIPTION" => "Замена данных в отсылаемом письме – {$arFields["AUTHOR"]}"
 	]);
+});
+
+
+$eventManager->addEventHandler("main", "OnBuildGlobalMenu", function (&$aGlobalMenu, &$aModuleMenu) {
+	global $USER;
+	if ($USER->IsAdmin() || !in_array(CONTENT_MANAGER_GROUP_ID, $USER->GetUserGroupArray())) {
+		return false;
+	}
+
+	foreach ($aGlobalMenu as $key => $v) {
+		if ($key !== 'global_menu_content') {
+			unset($aGlobalMenu[$key]);
+		}
+	}
+
+	foreach ($aModuleMenu as $index => $menu) {
+		if ($menu["items_id"] !== 'menu_iblock_/news') {
+			unset($aModuleMenu[$index]);
+		}
+	}
+});
+
+
+$eventManager->addEventHandler("main", "OnPageStart", function () {
+	global $APPLICATION;
+	$currentPage = $APPLICATION->GetCurPage();
+	if ($currentPage == '/bitrix/admin/') {
+		return;
+	}
+	if (!Bitrix\Main\Loader::includeModule('iblock')) {
+		return;
+	}
+
+	$filter = array(
+		"IBLOCK_ID" => META_IBLOCK_ID,
+		"NAME" => $currentPage,
+	);
+	$select = array("ID", "PROPERTY_TITLE", "PROPERTY_DESCRIPTION");
+	$result = CIBlockElement::GetList(array(), $filter, false, false, $select);
+	if ($match = $result->Fetch()) {
+		$APPLICATION->SetPageProperty('title',$match['PROPERTY_TITLE_VALUE']);
+		$APPLICATION->SetPageProperty('description',$match['PROPERTY_DESCRIPTION_VALUE']);
+	}
 });
