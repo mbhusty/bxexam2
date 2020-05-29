@@ -47,3 +47,26 @@ $eventManager->addEventHandler("main", "OnEpilog", function () {
 	}
 
 });
+
+
+// Modify author in Feedback form
+$eventManager->addEventHandler("main", "OnBeforeEventAdd", function (&$event, &$lid, &$arFields) {
+	global $USER;
+
+	if ($event !== "FEEDBACK_FORM") {
+		return true;
+	}
+
+	if (!$USER->IsAuthorized()) {
+		$arFields["AUTHOR"] = "Пользователь не авторизован, данные из формы: {$arFields["AUTHOR"]}";
+	} else {
+		$arFields["AUTHOR"] = "Пользователь авторизован: {$USER->GetID()} ({$USER->GetLogin()}) {$USER->GetFullName()}, данные из формы: {$arFields["AUTHOR"]}";
+	}
+	CEventLog::Add([
+		"SEVERITY" => "INFO",
+		"AUDIT_TYPE_ID" => "MAIL_DATA_REPLACED",
+		"MODULE_ID" => "main",
+		"ITEM_ID" => $USER->GetID(),
+		"DESCRIPTION" => "Замена данных в отсылаемом письме – {$arFields["AUTHOR"]}"
+	]);
+});
