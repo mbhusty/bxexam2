@@ -1,0 +1,4 @@
+<?
+$MESS["MESS_NAME_COMPONENT2"] = "Мой компонент2";
+$MESS["MESS_DESCRIPTION_COMPONENT2"] = "Экзамен №2";
+$MESS["MESS_GROUP_COMPONENT2"] = "Экзамен №2";
