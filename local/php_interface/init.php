@@ -1,2 +1,9 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . '/local/php_interface/includes/event_handlers.php';
+define("ROOT_DIR", $_SERVER["DOCUMENT_ROOT"]);
+
+/**
+ * Обработчики
+ */
+if (file_exists(ROOT_DIR . '/local/php_interface/includes/event_handlers.php')) {
+    require_once(ROOT_DIR . '/local/php_interface/includes/event_handlers.php');
+}
