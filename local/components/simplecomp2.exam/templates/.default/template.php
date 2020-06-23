@@ -5,6 +5,7 @@ use Bitrix\Main\Localization\Loc; ?>
 <b><?= Loc::getMessage("CATALOG_TITLE_EX2") ?></b>
 <? $sCurPage = $APPLICATION->GetCurPage() . "?F=Y"; ?>
 Тест фильтра: <a href="<?= $sCurPage ?>"><?= $sCurPage ?></a>
+<?echo time();?>
 <ul>
     <? foreach ($arResult["CLASS"] as $arClass): ?>
         <li><b><?= $arClass["NAME"] ?></b></li>
