@@ -5,6 +5,20 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+
+
+
+$arButtons = CIBlock::GetPanelButtons($arParams["ID_IBLOCK_CATALOG"]);
+$this->AddIncludeAreaIcon(
+    [
+        "TITLE"          => "ИБ в админке",
+        "URL"            => $arButtons['submenu']['element_list']['ACTION_URL'],
+        // Показать в контекстном меню
+        "IN_PARAMS_MENU" => true,
+    ]
+);
+
+
 if ($this->StartResultCache())
 {
     if(!Loader::includeModule("iblock"))
@@ -12,6 +26,9 @@ if ($this->StartResultCache())
         ShowError(GetMessage("SIMPLECOMP_EXAM2_IBLOCK_MODULE_NONE"));
         return;
     }
+
+
+
 $arSectFilter = array('IBLOCK_ID' => $arParams['ID_IBLOCK_CATALOG'], 'GLOBAL_ACTIVE' => 'Y');
 $arSectSelect = array("ID", "IBLOCK_ID", "NAME", "UF_*");
 $db_list = CIBlockSection::GetList(array(), $arSectFilter, false, $arSectSelect);
