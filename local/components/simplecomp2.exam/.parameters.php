@@ -28,6 +28,12 @@ $arComponentParameters = array(
             "TYPE" => "STRING",
             "DEFAULT" => ''
         ),
+        "ELEMENTS_PER_PAGE" => array(
+            "PARENT" => "BASE",
+            "NAME" => "Количество элементов на старнице",
+            "TYPE" => "STRING",
+            "DEFAULT" => ''
+        ),
         "LINK_TEMPLATE" => array(
             "PARENT" => "BASE",
             "NAME" => Loc::getMessage("MESS_LINK_TEMPLATE"),

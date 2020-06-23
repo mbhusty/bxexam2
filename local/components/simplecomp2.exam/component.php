@@ -15,8 +15,17 @@ $bFilter = false;
 if ($request->get('F')) {
     $bFilter = true;
 }
+$arParams['ELEMENTS_PER_PAGE'] = (int)$arParams['ELEMENTS_PER_PAGE'];
+$arParams["PAGER_TITLE"] = "Старинички";
+$arParams["PAGER_SHOW_ALL"] = "Y";
+$arNavParams = [
+    "nPageSize" => $arParams['ELEMENTS_PER_PAGE'],
+    "bShowAll"  => $arParams["PAGER_SHOW_ALL"],
+];
 
-if ($this->StartResultCache(false, [$USER->GetGroups(), $bFilter])) {
+$arNavigation = CDBResult::GetNavParams($arNavParams);
+
+if ($this->StartResultCache(false, [$USER->GetGroups(), $bFilter, $arNavigation])) {
     $arResult["CLASS"] = [];
     $arSelect = Array("ID", "IBLOCK_ID", "NAME");
     $arFilter = Array(
@@ -24,7 +33,15 @@ if ($this->StartResultCache(false, [$USER->GetGroups(), $bFilter])) {
         "CHECK_PERMISSIONS" => $arParams["CACHE_GROUPS"],
         "ACTIVE" => "Y"
     );
-    $res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+    $res = CIBlockElement::GetList(array(), $arFilter, false, $arNavParams, $arSelect);
+
+    $arResult["NAV_STRING"] = $res->GetPageNavStringEx(
+        $navComponentObject,
+        $arParams["PAGER_TITLE"],
+        $arParams["PAGER_TEMPLATE"],
+        $arParams["PAGER_SHOW_ALWAYS"]
+    );
+
     while($ob = $res->GetNext()){
         $arResult["CLASS"][$ob["ID"]] = $ob;
     }

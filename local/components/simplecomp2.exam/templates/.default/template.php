@@ -22,3 +22,4 @@ use Bitrix\Main\Localization\Loc; ?>
         </ul>
     <? endforeach; ?>
 </ul>
+<? echo $arResult["NAV_STRING"] ?>
