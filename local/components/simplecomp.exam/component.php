@@ -61,6 +61,16 @@ while ($newsElement = $rsNews->GetNext()) {
         if (isset($products[$sectionID])) {
             $newsElement["PRODUCTS"] = array_merge($newsElement["PRODUCTS"], $products[$sectionID]);
         }
+        // <ex2-58>
+        $arButtons = CIBlock::GetPanelButtons(
+            $newsElement["IBLOCK_ID"],
+            $newsElement["ID"],
+            0,
+            ["SECTION_BUTTONS" => false, "SESSID" => false]
+        );
+        $newsElement["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+        $newsElement["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+        // </ex2-58>
     }
     $newsResult[] = $newsElement;
 }
@@ -71,4 +81,21 @@ $this->SetResultCacheKeys(array(
     "PRODUCTS_COUNT",
 ));
 $APPLICATION->SetTitle(Loc::getMessage("MESS_CATALOG_ELEMENT_COUNT_TITLE").$arResult["PRODUCTS_COUNT"]);
+
+if (
+    !empty($arParams["ID_IBLOCK_CATALOG"]) &&
+    $USER->IsAuthorized() &&
+    // Возвращает "true", если кнопка "Показать включаемые области" на панели управления нажата, в противном случае - "false".
+    $APPLICATION->GetShowIncludeAreas()
+) {
+    // Метод возвращает массив, описывающий набор кнопок для управления элементами инфоблока
+/*    $arButtons = CIBlock::GetPanelButtons(
+       $arParams["ID_IBLOCK_CATALOG"],
+        0,
+        0,
+        ["SECTION_BUTTONS" => false]
+    );*/
+    // Добавляет массив новых кнопок к тем кнопкам компонента, которые отображаются в области компонента в режиме редактирования сайта.
+    $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
+}
 $this->includeComponentTemplate();
