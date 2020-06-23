@@ -39,9 +39,12 @@ $arSectElemSelect =
 $rsProducts = CIBlockElement::GetList(array(), $arSectElemFilter, false, false, $arSectElemSelect);
 $products = [];
 $arResult["PRODUCTS_COUNT"] = 0;
+$arAllPrice = [];
 while ($product = $rsProducts->GetNext()) {
     $arResult["PRODUCTS_COUNT"]++;
     $products[$product["IBLOCK_SECTION_ID"]][] = $product;
+
+    $arAllPrice[] = $product["PROPERTY_PRICE_VALUE"];
 }
 
 $arNewsFilter = array(
@@ -71,4 +74,19 @@ $this->SetResultCacheKeys(array(
     "PRODUCTS_COUNT",
 ));
 $APPLICATION->SetTitle(Loc::getMessage("MESS_CATALOG_ELEMENT_COUNT_TITLE").$arResult["PRODUCTS_COUNT"]);
+
+
+$arResult["MIN_PRICE"] = min($arAllPrice);
+// Максимальная цена
+$arResult["MAX_PRICE"] = max($arAllPrice);
+
+$APPLICATION->AddViewContent(
+    "min_price",
+    "Минимальная цена:" . $arResult["MIN_PRICE"]
+);
+$APPLICATION->AddViewContent(
+    "max_price",
+    "Максимальная цена:". $arResult["MAX_PRICE"]
+);
+
 $this->includeComponentTemplate();
