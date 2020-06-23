@@ -5,12 +5,18 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
-
+$request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 if (!Loader::includeModule("iblock")) {
     ShowError(GetMessage("SIMPLECOMP_EXAM2_IBLOCK_MODULE_NONE"));
     return;
 }
-if ($this->StartResultCache(false, $USER->GetGroups())) {
+
+$bFilter = false;
+if ($request->get('F')) {
+    $bFilter = true;
+}
+
+if ($this->StartResultCache(false, [$USER->GetGroups(), $bFilter])) {
     $arResult["CLASS"] = [];
     $arSelect = Array("ID", "IBLOCK_ID", "NAME");
     $arFilter = Array(
@@ -42,6 +48,29 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
         'NAME' => 'ASC',
         'SORT' => 'ASC'
     ];
+
+    // ex2-49
+    if ($bFilter) {
+        $arFilterElems[] = [
+            // Логика фильтра «или», должны отбираться элементы, удовлетворяющие или условию 1 или условию 2
+            "LOGIC" => "OR",
+            [
+                // 1: с ценой меньше или равной 1700 и материалом равным «Дерево, ткань»
+                "<=PROPERTY_PRICE" => "1700",
+                "PROPERTY_MATERIAL" => "Дерево, ткань"
+            ],
+            [
+                // 2: с ценой меньше 1500 и материалом равным «Металл, пластик»
+                "<PROPERTY_PRICE" => "1500",
+                "PROPERTY_MATERIAL" => "Металл, пластик"
+            ],
+        ];
+
+        // Компонент не должен кешировать результат работы, если используется дополнительный фильтр.
+        $this->abortResultCache();
+    }
+
+
     $arResult["ELEMENTS"] = [];
 
     $resElements = \CIBlockElement::GetList(
