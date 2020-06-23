@@ -10,7 +10,7 @@ $APPLICATION->SetTitle("Простой компонент2");
 		"CACHE_TYPE" => "A",
 		"ID_IBLOCK_CATALOG" => "2",
 		"ID_IBLOCK_CLASS" => "7",
-		"LINK_TEMPLATE" => "",
+		"LINK_TEMPLATE" => "/catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
 		"UF_CATALOG_CODE" => "FIRM"
 	)
 );?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
