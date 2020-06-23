@@ -5,6 +5,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+global $CACHE_MANAGER;
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 if (!Loader::includeModule("iblock")) {
     ShowError(GetMessage("SIMPLECOMP_EXAM2_IBLOCK_MODULE_NONE"));
@@ -26,6 +27,11 @@ $arNavParams = [
 $arNavigation = CDBResult::GetNavParams($arNavParams);
 
 if ($this->StartResultCache(false, [$USER->GetGroups(), $bFilter, $arNavigation])) {
+
+    if (defined('BX_COMP_MANAGED_CACHE')) {
+        $CACHE_MANAGER->RegisterTag("iblock_id_" . 3);
+    }
+
     $arResult["CLASS"] = [];
     $arSelect = Array("ID", "IBLOCK_ID", "NAME");
     $arFilter = Array(
