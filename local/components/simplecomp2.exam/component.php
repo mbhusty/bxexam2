@@ -38,15 +38,22 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
         "PROPERTY_" . $arParams["UF_CATALOG_CODE"] => $arClassIDs,
         "ACTIVE"                                 => "Y",
     ];
-
+    $arSortElems = [
+        'NAME' => 'ASC',
+        'SORT' => 'ASC'
+    ];
     $arResult["ELEMENTS"] = [];
 
     $resElements = \CIBlockElement::GetList(
-        array(),
+        $arSortElems,
         $arFilterElems,
         false, false,
         $arSelectElems
     );
+
+    if ($arParams["LINK_TEMPLATE"]) {
+        $resElements->SetUrlTemplates($arParams["LINK_TEMPLATE"]);
+    }
 
     while ($ob = $resElements->GetNextElement()) {
         $arEl = $ob->GetFields();

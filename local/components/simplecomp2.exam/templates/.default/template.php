@@ -14,7 +14,7 @@ use Bitrix\Main\Localization\Loc; ?>
                         <?= $arEl["NAME"] ?>
                         - <?= $arEl["PROPS"]["PRICE"]["VALUE"] ?>
                         - <?= $arEl["PROPS"]["MATERIAL"]["VALUE"] ?>
-                    </a>
+                    </a><?=$arEl["DETAIL_PAGE_URL"]?>
                 </li>
             <? endforeach; ?>
         </ul>
