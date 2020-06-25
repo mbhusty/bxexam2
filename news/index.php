@@ -3,7 +3,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Новости");
 ?><?$APPLICATION->IncludeComponent(
 	"bitrix:news",
-	"ex2-108",
+	".default",
 	Array(
 		"ADD_ELEMENT_CHAIN" => "N",
 		"ADD_SECTIONS_CHAIN" => "Y",
@@ -75,5 +75,6 @@ $APPLICATION->SetTitle("Новости");
 		"USE_SEARCH" => "N",
 		"YANDEX" => "N",
 		"CANONICAL_IBLOCK_ID" => "5",
+        "REPORT_AJAX" => "Y",
 	)
 );?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

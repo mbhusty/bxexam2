@@ -114,6 +114,25 @@ $APPLICATION->IncludeFile(
 );?>
 				<div class="content-block">
 					<div class="content-block-inner">
+				<h3><?=GetMessage('CFT_LANG_CANGE')?></h3>
+                <?// Выбор сайта - http://dev.1c-bitrix.ru/user_help/settings/settings/components_2/navigation/main_site_selector.php
+                $APPLICATION->IncludeComponent("bitrix:main.site.selector", "dropdown", Array(
+	"SITE_LIST" => array(	// Список сайтов
+			0 => "s2",
+			1 => "s1",
+		),
+		"CACHE_TYPE" => "A",	// Тип кеширования
+		"CACHE_TIME" => "3600",	// Время кеширования (сек.)
+		"CACHE_NOTES" => "",
+		"COMPONENT_TEMPLATE" => "dropdown"
+	),
+	false
+);?>
+					</div></div>
+
+
+				<div class="content-block">
+					<div class="content-block-inner">
 						<h3><?=GetMessage('CFT_NEWS')?></h3>
 <?
 $APPLICATION->IncludeFile(

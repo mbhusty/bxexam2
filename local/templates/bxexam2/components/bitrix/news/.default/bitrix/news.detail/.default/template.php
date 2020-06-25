@@ -8,6 +8,41 @@
 	<?endif;?>
 	<?if($arParams["DISPLAY_NAME"]!="N" && $arResult["NAME"]):?>
 		<h3><?=$arResult["NAME"]?></h3>
+		<span style="font-style: italic;">
+            <? if ($arParams['REPORT_AJAX'] == 'Y'): ?>
+                <? //<Работа в режиме Ajax> ?>
+	            <a id="ajax-report" href="#" onclick="return false;">Пожаловаться!</a>
+	            <script>
+                    BX.ready(function () {
+	                    // Ссылка, выполняющая роль кнопки
+	                    var ajaxReportBtn = document.getElementById('ajax-report');
+	                    // Вывод результата
+	                    var textElem = document.getElementById('ajax-report-text');
+
+	                    ajaxReportBtn.onclick = function () {
+		                    // Функция загружает json-объект из заданного url и передает его обработчику callback
+		                    BX.ajax.loadJSON(
+			                    '<?=$APPLICATION->GetCurPage()?>',
+			                    {'TYPE': 'REPORT_AJAX', 'ID': <?=$arResult['ID']?>},
+			                    // Обработчик
+			                    function (data) {
+				                    textElem.innerText = "Ваше мнение учтено, №" + data['ID'];
+			                    },
+			                    // Обработчик ошибочной ситуации
+			                    function (data) {
+				                    textElem.innerText = "Ошибка Ajax!";
+			                    }
+		                    );
+	                    };
+                    });
+                </script>
+            <? else: ?>
+                <? //<Работа в режиме GET> ?>
+				<a href="<?= $APPLICATION->GetCurPage() ?>?TYPE=REPORT_GET&ID=<?= $arResult['ID'] ?>">Пожаловаться!</a>
+            <? endif; ?>
+            <? //<Вывод строки с результатом> ?>
+                <span id="ajax-report-text"></span>
+			</span>
 	<?endif;?>
 	<div class="news-detail">
 	<?if($arParams["DISPLAY_PREVIEW_TEXT"]!="N" && $arResult["FIELDS"]["PREVIEW_TEXT"]):?>
