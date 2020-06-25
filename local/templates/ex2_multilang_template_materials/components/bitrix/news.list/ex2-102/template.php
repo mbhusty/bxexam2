@@ -50,7 +50,7 @@ $this->setFrameMode(true);
 		<?if($arParams["DISPLAY_DATE"]!="N" && $arItem["DISPLAY_ACTIVE_FROM"]):?>
 			<span class="news-date-time"><?echo $arItem["DISPLAY_ACTIVE_FROM"]?></span>
 		<?endif?>
-		<?if($arParams["DISPLAY_NAME"]!="N" && $arItem["NAME"]):?>
+		<?if($arParams["DISPLAY_NAME"]!="N" && $arItem["DISPLAY_PROPERTIES"]["NAME_EN"]["VALUE"]):?>
 			<?if(!$arParams["HIDE_LINK_WHEN_NO_DETAIL"] || ($arItem["DETAIL_TEXT"] && $arResult["USER_HAVE_ACCESS"])):?>
 				<a href="<?echo $arItem["DETAIL_PAGE_URL"]?>"><b><?echo $arItem["DISPLAY_PROPERTIES"]["NAME_EN"]["VALUE"]?></b></a><br />
 			<?else:?>
