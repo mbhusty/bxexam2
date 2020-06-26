@@ -73,7 +73,24 @@ $eventManager->addEventHandler("main", "OnBeforeEventAdd", function (&$event, &$
 });
 
 
+$eventManager->addEventHandler("main", "OnBuildGlobalMenu", function (&$aGlobalMenu, &$aModuleMenu) {
+	global $USER;
+	if ($USER->IsAdmin() || !in_array(CONTENT_MANAGER_GROUP_ID, $USER->GetUserGroupArray())) {
+		return false;
+	}
 
+	foreach ($aGlobalMenu as $key => $v) {
+		if ($key !== 'global_menu_content') {
+			unset($aGlobalMenu[$key]);
+		}
+	}
+
+	foreach ($aModuleMenu as $index => $menu) {
+		if ($menu["items_id"] !== 'menu_iblock_/news') {
+			unset($aModuleMenu[$index]);
+		}
+	}
+});
 
 
 $eventManager->addEventHandler("main", "OnPageStart", function () {
